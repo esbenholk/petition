@@ -1,0 +1,64 @@
+@font-face {
+    font-family: "friends"; /*a name to be used later*/
+    src: url("GABRWFFR.TTF"); /*URL to font*/
+}
+
+body {
+    box-sizing: border-box;
+    background: linear-gradient(
+        292deg,
+        rgb(135, 61, 255),
+        rgb(255, 0, 225),
+        rgb(38, 0, 255)
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h1 {
+    text-align: center;
+    font-family: "friends";
+    color: white;
+    text-shadow: 1px 2px rgb(38, 0, 255);
+}
+#subscriber_information {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+#submit {
+    width: 60px;
+    height: 60px;
+    background: yellow;
+    border-radius: 50%;
+    color: #79679b;
+    text-shadow: rgb(135, 61, 255);
+    box-shadow: rgb(135, 61, 255);
+}
+#signature {
+    background: #79679b;
+    border: 2px yellow solid;
+    width: 600px;
+    height: 100px;
+}
+#secretsignature {
+    display: none;
+}
+
+footer a {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: white;
+    font-size: 10px;
+    text-decoration: none;
+}
+
+.message {
+    height: 100px;
+}
+
+#letter {
+    width: 600px;
+    text-align: justify;
+}
