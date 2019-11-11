@@ -1,6 +1,9 @@
 (function() {
     var ctx = document.getElementById("signature").getContext("2d");
     var canvas = document.getElementById("signature");
+    var secretsignature = document.getElementById("secretsignature");
+    var submit = document.getElementById("submit");
+    let canvasData;
     var mouseDown = false;
     var lastX, lastY;
     // const rect = canvas.getBoundingClientRect();
@@ -15,6 +18,9 @@
 
     canvas.addEventListener("mouseup", function(e) {
         mouseDown = false;
+        canvasData = canvas.toDataURL("image/png");
+        secretsignature.value = canvasData;
+        console.log(canvasData);
     });
 
     canvas.addEventListener("mousemove", function(e) {
@@ -31,4 +37,14 @@
             ctx.closePath();
         }
     });
+
+    // submit.addEventListener("click", function(e) {
+    //     console.log("button");
+    //     let inputfields = document.getElementsByTagName("input");
+    //     for (var i = 0; i < inputfields.length; i++) {
+    //         if (inputfields[i].value == "" || inputfields[i].value == null) {
+    //             inputfields[i].style.border = "2px pink";
+    //         }
+    //     }
+    // });
 })();

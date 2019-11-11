@@ -41,6 +41,10 @@ h1 {
     width: 600px;
     height: 100px;
 }
+#canvascontainer {
+    width: 600px;
+    height: 100px;
+}
 #secretsignature {
     display: none;
 }
@@ -54,11 +58,34 @@ footer a {
     text-decoration: none;
 }
 
-.message {
+#message {
     height: 100px;
+}
+.input {
+    margin: 20px;
 }
 
 #letter {
     width: 600px;
     text-align: justify;
+    color: white;
+    font-family: "friends";
+}
+#lettertext {
+    width: 600px;
+    font-family: "arial";
+}
+#signers {
+    text-align: center;
+    color: white;
+    font-family: "friends";
+}
+.thankyou {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#happyanistongif {
+    text-align: center;
 }

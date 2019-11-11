@@ -1,17 +1,18 @@
-<div id="letter">
-    <p>dear miss Aniston, this letter is 4 u, from all your most devoted fans. We wrote it together, signed it and send it off! <br> the following is a seqeuntially built text, created in parts of max 180 character size</p>
-</div>
+
+
+{{> letter description=true}}
 
 <form id="subscriber_information" action="/signature" method="POST">
-    <input class="first_name" placeholder="pls input your first name"> </input>
-    <input class="last_name" placeholder="and now your last name... friend"> </input>
-    <input class="message" placeholder="u have 180 characters to add to our letter to miss Jennifer Aniston"> </input>
-    <input id="secretsignature"></input>
-    <canvas id="signature"> </canvas>
-    <button id="submit" > LOVE IT! SEND IT </button>
+    <!-- <input name="firstName" id="firstName" placeholder="pls input your first name"> </input>
+    <input name="lastName" id="lastName" placeholder="and now your last name... friend"> </input> -->
+    <input name="message" id="message" placeholder="u have 180 characters to add to our letter to miss Jennifer Aniston"> </input>
+    <input name="signature" id="secretsignature"></input>
+    <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
+    <p id="signers"> xoxo love from ... {{names}} </p>
+    <canvas id="signature" width="600" height="100"> </canvas>
+    <button type="submit" id="submit" > LOVE IT! SEND IT </button>
 </form>
 
 
 
 <script src = '/canvas.js'></script>
-<!-- <script src = '/submit.js'></script> -->

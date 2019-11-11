@@ -1,9 +1,19 @@
+DROP TABLE IF EXISTS subscribers;
+DROP TABLE IF EXISTS registration;
+
+
 CREATE TABLE subscribers (
 id SERIAL primary key,
-first_name VARCHAR(255) NOT NULL,
-last_name VARCHAR(255) NOT NULL,
-age INT,
-city VARCHAR(255),
-signatur TEXT,
-message VARCHAR(180)
+message VARCHAR(180) CHECK (message != ''),
+signature TEXT NOT NULL CHECK (signature != ''),
+user_id INTEGER
+);
+
+CREATE TABLE registration (
+id SERIAL primary key,
+firstname VARCHAR(255) NOT NULL CHECK (firstname != ''),
+lastname VARCHAR(255) NOT NULL CHECK (lastname != ''),
+email VARCHAR(180) NOT NULL CHECK (email != '') UNIQUE,
+password TEXT NOT NULL CHECK (password != '')
+
 );
