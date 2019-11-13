@@ -96,12 +96,10 @@ app.post("/login", (req, res) => {
         body += chunk;
     }).on("end", () => {
         let pbody = querystring.parse(body);
-        console.log(pbody.email);
         databaseActions
             .getLoginDetails(pbody.email)
             .then(userDetails => {
                 if (compare(pbody.password, userDetails.rows[0].password)) {
-                    console.log("succesful login", userDetails.rows[0].id);
                     req.session.key = userDetails.rows[0].id;
                     res.redirect("/petition");
                 }
@@ -172,7 +170,37 @@ app.post("/signature", (req, res) => {
     });
 }); //signing petition
 
-app.get("/signatures", (req, res) => {
+app.post("/updateprofile", (req, res) => {
+    let body = "";
+    req.on("data", chunk => {
+        body += chunk;
+    }).on("end", () => {
+        let pbody = querystring.parse(body);
+        hash(pbody.password).then(hashedPassword => {
+            Promise.all([
+                databaseActions.createUserDetails(
+                    pbody.age,
+                    pbody.city,
+                    pbody.url,
+                    req.session.key
+                ),
+                databaseActions.updateRegistration(
+                    pbody.firstName,
+                    pbody.lastName,
+                    pbody.email,
+                    hashedPassword,
+                    req.session.key
+                )
+            ])
+                .then(results => {
+                    res.redirect("/petition");
+                })
+                .catch(err => console.log("doesnt update database", err));
+        });
+    });
+});
+
+app.get("/thankyou", (req, res) => {
     console.log("session key in GET request signature", req.session.key);
     Promise.all([
         databaseActions.getSubscribers("signature", req.session.key),

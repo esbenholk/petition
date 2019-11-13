@@ -63,6 +63,19 @@ module.exports.register = function registerUser(
     );
 };
 
+module.exports.updateRegistration = function updateRegistration(
+    firstname,
+    lastname,
+    email,
+    hashedPassword,
+    id
+) {
+    return database.query(
+        `INSERT INTO registration (firstname, lastname, email, password, id) VALUES ($1, $2, $3, $4, $5) on CONFLICT (id) DO UPDATE SET firstname = $1, lastname = $2, email= $3, password=$4`,
+        [firstname, lastname, email, hashedPassword, id]
+    );
+};
+
 module.exports.createUserDetails = function createUserDetails(
     age,
     city,
@@ -70,7 +83,7 @@ module.exports.createUserDetails = function createUserDetails(
     user_profiles_id
 ) {
     return database.query(
-        `INSERT INTO user_profiles (age, city, url, user_profiles_id) VALUES ($1, $2, $3, $4)`,
+        `INSERT INTO user_profiles (age, city, url, user_profiles_id) VALUES ($1, $2, $3, $4) on CONFLICT (user_profiles_id) DO UPDATE SET age = $1, city = $2, url = $3`,
         [age, city, url, user_profiles_id]
     );
 };

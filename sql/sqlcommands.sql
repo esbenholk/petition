@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS subscribers;
-DROP TABLE IF EXISTS registration;
+DROP TABLE IF EXISTS registration CASCADE;
 DROP TABLE IF EXISTS user_profiles;
 
 
@@ -20,7 +20,7 @@ password TEXT NOT NULL CHECK (password != '')
 
 CREATE TABLE user_profiles(
     id SERIAL PRIMARY KEY,
-    age INT,
+    age VARCHAR,
     city VARCHAR,
     url VARCHAR,
     user_profiles_id INT REFERENCES registration(id) NOT NULL UNIQUE
