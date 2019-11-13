@@ -30,9 +30,10 @@
             x = e.clientX - canvas.offsetLeft;
             y = e.clientY - canvas.offsetTop;
             ctx.beginPath();
+            ctx.lineWidth = 5;
             ctx.moveTo(lastX, lastY);
             ctx.lineTo(x, y);
-            ctx.strokeStyle = "hotpink";
+            ctx.strokeStyle = "white";
             ctx.stroke();
             ctx.closePath();
         }

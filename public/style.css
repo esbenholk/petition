@@ -89,3 +89,35 @@ footer a {
 #happyanistongif {
     text-align: center;
 }
+#usermenu.on {
+    transform: translateX(0%);
+}
+#usermenu {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 15%;
+    background: linear-gradient(292deg, rgb(135, 61, 255), rgb(38, 0, 255));
+    border: 2px solid rgb(38, 0, 255);
+    transform: translateX(100%);
+    transition-duration: 2s;
+}
+#menucloser {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    color: white;
+}
+#menutrigger {
+    position: fixed;
+    right: 0;
+    top: 0;
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    color: white;
+}

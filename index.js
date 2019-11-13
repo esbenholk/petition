@@ -18,6 +18,7 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 ); //cookie session
+
 app.get("/register", (req, res) => {
     if (req.session.key) {
         res.redirect("/petition");
@@ -60,12 +61,28 @@ app.post("/register", (req, res) => {
                 )
                 .then(id => {
                     req.session.key = id.rows[0].id;
-                    console.log("session key", req.session);
-                    res.render("./petition.handlebars");
+                    databaseActions
+                        .getLoginDetails(pbody.email)
+                        .then(results => {
+                            console.log(
+                                "user data for update form (name)",
+                                results.rows[0].firstname
+                            );
+                            res.render("./profileupdate", {
+                                layout: "main",
+                                firstname: results.rows[0].firstname,
+                                lastname: results.rows[0].lastname,
+                                email: results.rows[0].email
+                            });
+                        });
                 })
-                .catch(err =>
-                    console.log("error with registration and hashing", err)
-                );
+                .catch(err => {
+                    console.log("error with registration and hashing", err);
+                    res.render("./registration", {
+                        layout: "main",
+                        error: "the email is already registered"
+                    });
+                });
         });
     });
 });
@@ -103,17 +120,28 @@ app.use((request, response, next) => {
 }); //middleware check for sessioncookkie
 
 app.get("/petition", (req, res) => {
-    databaseActions
-        .writeLetter()
+    Promise.all([
+        databaseActions.writeLetter(),
+        databaseActions.getUserName(req.session.key)
+    ])
+
         .then(results => {
             console.log(results);
             let letter = "";
-            for (let i = 0; i < results.rows.length; i++) {
-                letter += results.rows[i].message;
+            for (let i = 0; i < results[0].rows.length; i++) {
+                letter += results[0].rows[i].message;
             }
+            let name = "";
+            for (let i = 0; i < results[1].rows.length; i++) {
+                name += results[1].rows[i].firstname;
+                name += " ";
+                name += results[1].rows[i].lastname;
+            }
+            console.log("name", name);
             res.render("petition", {
                 layout: "main",
-                letter: letter
+                letter: letter,
+                name: name
             });
         })
         .catch(err => console.log("letter unavailable"));
@@ -125,7 +153,6 @@ app.post("/signature", (req, res) => {
         body += chunk;
     }).on("end", () => {
         let pbody = querystring.parse(body);
-        console.log("session key in signature", req.session.key);
         databaseActions
             .createSubscribers(pbody.message, pbody.signature, req.session.key)
             .then(id => {
@@ -133,7 +160,7 @@ app.post("/signature", (req, res) => {
                 res.redirect("signatures");
             })
             .catch(err => {
-                res.redirect("/petition");
+                res.render("/petition");
                 console.log("u didnt fill out everything");
             });
     });
@@ -143,26 +170,26 @@ app.get("/signatures", (req, res) => {
     console.log("session key in GET request signature", req.session.key);
     Promise.all([
         databaseActions.getSubscribers("signature", req.session.key),
-        databaseActions.getNames(),
-        databaseActions.writeLetter()
+        databaseActions.writeLetter(),
+        databaseActions.getUserName(req.session.key)
+        // ,databaseActions.getNames()
     ])
         .then(results => {
-            let names = "";
-            for (var i = 0; i < results[1].rows.length; i++) {
-                let extra = results[1].rows[i].row.replace("(", "");
-                let nextra = extra.replace(")", "     ");
-                let mextra = nextra.replace(",", " ");
-                names += mextra;
-            }
-            let letter = "";
+            let name = "";
             for (let i = 0; i < results[2].rows.length; i++) {
-                letter += results[2].rows[i].message;
+                name += results[2].rows[i].firstname;
+                name += " ";
+                name += results[2].rows[i].lastname;
             }
-            console.log("names", results[0].rows);
+
+            let letter = "";
+            for (let i = 0; i < results[1].rows.length; i++) {
+                letter += results[1].rows[i].message;
+            }
             res.render("signatures", {
                 layout: "main",
                 signature: results[0].rows[0].signature,
-                names: names,
+                name: name,
                 letter: letter
             });
         })
