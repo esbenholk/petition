@@ -83,11 +83,14 @@ app.get("/updateprofile", (req, res) => {
                 layout: "main",
                 firstname: results.rows[0].firstname,
                 lastname: results.rows[0].lastname,
-                email: results.rows[0].email
+                email: results.rows[0].email,
+                age: results.rows[0].age,
+                city: results.rows[0].city,
+                url: results.rows[0].url
             });
         })
         .catch(err => {
-            console.log("error in getting profile data for update");
+            console.log("joint query in database doesnt work,", err);
         });
 });
 app.post("/login", (req, res) => {
@@ -205,7 +208,8 @@ app.get("/thankyou", (req, res) => {
     Promise.all([
         databaseActions.getSubscribers("signature", req.session.key),
         databaseActions.writeLetter(),
-        databaseActions.getUserName(req.session.key)
+        databaseActions.getUserName(req.session.key),
+        databaseActions.getUserDetails(req.session.key)
         // ,databaseActions.getNames()
     ])
         .then(results => {
@@ -224,7 +228,11 @@ app.get("/thankyou", (req, res) => {
                 layout: "main",
                 signature: results[0].rows[0].signature,
                 name: name,
-                letter: letter
+                letter: letter,
+                email: results[3].rows[0].email,
+                age: results[3].rows[0].age,
+                city: results[3].rows[0].city,
+                message: results[3].rows[0].message
             });
         })
         .catch(err => console.log("didnt getSubscribers", err));
@@ -237,3 +245,7 @@ app.get("/superfans", (req, res) => {
 });
 
 app.listen(process.env.PORT || 8080, () => console.log("awake"));
+
+//////remember to add: logout and link to udate-profile in usermenu, and style it! create usercatalogue for "co-signers"
+/////style style style
+////csurf

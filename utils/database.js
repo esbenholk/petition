@@ -33,9 +33,10 @@ module.exports.getLoginDetails = function getLoginDetails(identifier) {
     ]);
 }; //get password to compare in login
 module.exports.getUserDetails = function getUserDetails(identifier) {
-    return database.query(`SELECT * FROM registration WHERE id= $1`, [
-        identifier
-    ]);
+    return database.query(
+        `SELECT * FROM registration LEFT OUTER JOIN user_profiles ON registration.id = user_profiles.user_profiles_id WHERE registration.id = $1`,
+        [identifier]
+    );
 }; //gets all user details using req.session.key as identifier for user
 
 //////PUTTING IN DATA queries
@@ -70,6 +71,7 @@ module.exports.updateRegistration = function updateRegistration(
     hashedPassword,
     id
 ) {
+    /// updated registration table using Conflict with ID=session.key
     return database.query(
         `INSERT INTO registration (firstname, lastname, email, password, id) VALUES ($1, $2, $3, $4, $5) on CONFLICT (id) DO UPDATE SET firstname = $1, lastname = $2, email= $3, password=$4`,
         [firstname, lastname, email, hashedPassword, id]
@@ -82,6 +84,7 @@ module.exports.createUserDetails = function createUserDetails(
     url,
     user_profiles_id
 ) {
+    //create/update user description in new table user_profiles
     return database.query(
         `INSERT INTO user_profiles (age, city, url, user_profiles_id) VALUES ($1, $2, $3, $4) on CONFLICT (user_profiles_id) DO UPDATE SET age = $1, city = $2, url = $3`,
         [age, city, url, user_profiles_id]

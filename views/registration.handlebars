@@ -1,5 +1,10 @@
-<p> {{error}} </p>
-<form id="registration" action="/register" method="POST">
+
+<div id="registrationpage" >
+    <img id="coverimage" src="aletter4aniston.png" alt="aniston is fantastic right?">
+
+    <div id="registrationform">
+    <p> {{error}} </p>
+    <form id="registration" action="/register" method="POST">
     <input name="firstName" id="firstName" placeholder="pls input your first name"> </input>
     <input name="lastName" id="lastName" placeholder="and now your last name... friend"> </input>
     <input name="email" id="email" placeholder="your unique email"> </input>
@@ -7,5 +12,7 @@
     <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
 
     <button type="submit" id="register" > GOOD JOB! REGISTER HERE</button>
-</form>
+    </form>
     <p> or if u already have a user <a href="/login"> log in here! </a> </p>
+    </div>
+</div>

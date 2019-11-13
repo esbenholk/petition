@@ -2,7 +2,7 @@
     font-family: "friends"; /*a name to be used later*/
     src: url("GABRWFFR.TTF"); /*URL to font*/
 }
-
+/* main layout */
 body {
     box-sizing: border-box;
     background: linear-gradient(
@@ -20,7 +20,38 @@ h1 {
     font-family: "friends";
     color: white;
     text-shadow: 1px 2px rgb(38, 0, 255);
+    z-index: 99999999999999999999;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
+#frame {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+/* general */
+footer a {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: white;
+    font-size: 10px;
+    text-decoration: none;
+}
+#message {
+    height: 100px;
+}
+.input {
+    margin: 20px;
+}
+
+/* petitioninformation */
 #subscriber_information {
     display: flex;
     flex-direction: column;
@@ -49,22 +80,7 @@ h1 {
     display: none;
 }
 
-footer a {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    color: white;
-    font-size: 10px;
-    text-decoration: none;
-}
-
-#message {
-    height: 100px;
-}
-.input {
-    margin: 20px;
-}
-
+/* letter and signature  */
 #letter {
     width: 600px;
     text-align: justify;
@@ -89,6 +105,8 @@ footer a {
 #happyanistongif {
     text-align: center;
 }
+
+/* ///usermenufunctions */
 #usermenu.on {
     transform: translateX(0%);
 }
@@ -120,4 +138,70 @@ footer a {
     background-repeat: no-repeat;
     border: none;
     color: white;
+}
+#thumbnail {
+    width: 30px;
+    height: 20px;
+}
+
+/* registrationpage */
+#registrationpage {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+}
+#registrationform {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#coverimage {
+    width: 100%;
+    height: auto;
+    display: cover;
+}
+#registrationpage input {
+    text-align: center;
+    margin: 4px;
+    background: yellow;
+    width: 100%;
+    z-index: 0;
+}
+#registrationpage button {
+    background: linear-gradient(
+        292deg,
+        rgb(135, 61, 255),
+        rgb(255, 0, 225),
+        rgb(38, 0, 255)
+    );
+    color: white;
+    float: right;
+}
+
+/* loginpage */
+#loginpage {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+#loginimage {
+    width: 100%;
+    height: auto;
+    display: cover;
+}
+#login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
 }

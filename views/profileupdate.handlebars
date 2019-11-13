@@ -1,10 +1,16 @@
+
+
+<div id="fake-license">
+    <img src="anistonregistration.jpg">
+</div> 
+
 <form id="update" action="/updateprofile" method="POST">
 <ul>
     <li><input name="firstName" id="firstName" value="{{firstname}}"placeholder="first name"> </input>
     <li><input name="lastName" id="lastName" value="{{lastname}}" placeholder="last name... friend"> </input>
-    <li><input type="number" name="age" id="age" placeholder="age"> </input>
-    <li><input name="city" id="city" placeholder="city"> </input>
-    <li><input name="url" id="url" placeholder="URL"> </input>
+    <li><input type="number" name="age" value="{{age}}"id="age" placeholder="age"> </input>
+    <li><input name="city" id="city" value="{{city}}"placeholder="city"> </input>
+    <li><input name="url" id="url" value="{{url}}" placeholder="URL"> </input>
     <li><input name="email" id="email" value="{{email}}" placeholder="email"> </input>
     <li><input name="password" id="password" value="{{password}}" placeholder="password"></input>
     <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
