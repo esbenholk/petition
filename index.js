@@ -43,6 +43,7 @@ app.get("/login", (req, res) => {
         });
     }
 });
+
 app.post("/register", (req, res) => {
     //register post request
     let body = "";
@@ -59,22 +60,9 @@ app.post("/register", (req, res) => {
                     pbody.email,
                     hashedPassword
                 )
-                .then(id => {
-                    req.session.key = id.rows[0].id;
-                    databaseActions
-                        .getLoginDetails(pbody.email)
-                        .then(results => {
-                            console.log(
-                                "user data for update form (name)",
-                                results.rows[0].firstname
-                            );
-                            res.render("./profileupdate", {
-                                layout: "main",
-                                firstname: results.rows[0].firstname,
-                                lastname: results.rows[0].lastname,
-                                email: results.rows[0].email
-                            });
-                        });
+                .then(result => {
+                    req.session.key = result.rows[0].id;
+                    res.redirect("/updateprofile");
                 })
                 .catch(err => {
                     console.log("error with registration and hashing", err);
@@ -86,7 +74,22 @@ app.post("/register", (req, res) => {
         });
     });
 });
-
+app.get("/updateprofile", (req, res) => {
+    console.log(req.session.key);
+    databaseActions
+        .getUserDetails(req.session.key)
+        .then(results => {
+            res.render("./profileupdate", {
+                layout: "main",
+                firstname: results.rows[0].firstname,
+                lastname: results.rows[0].lastname,
+                email: results.rows[0].email
+            });
+        })
+        .catch(err => {
+            console.log("error in getting profile data for update");
+        });
+});
 app.post("/login", (req, res) => {
     let body = "";
     req.on("data", chunk => {
@@ -157,10 +160,13 @@ app.post("/signature", (req, res) => {
             .createSubscribers(pbody.message, pbody.signature, req.session.key)
             .then(id => {
                 // req.session.key = id.rows[0].id;
-                res.redirect("signatures");
+                res.redirect("thankyou");
             })
             .catch(err => {
-                res.render("/petition");
+                res.render("/petition", {
+                    layout: "main",
+                    error: "u didnt write your message :)"
+                });
                 console.log("u didnt fill out everything");
             });
     });
@@ -202,4 +208,4 @@ app.get("/superfans", (req, res) => {
     });
 });
 
-app.listen(8080, () => console.log("awake"));
+app.listen(process.env.PORT || 8080, () => console.log("awake"));

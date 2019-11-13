@@ -1,5 +1,8 @@
 var spicedPg = require("spiced-pg");
-var database = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
+var database = spicedPg(
+    process.env.DATABASE_URL ||
+        "postgres:postgres:postgres@localhost:5432/petition"
+);
 
 //database queeries. we will use this module to facilitate all of our commands to the psql database
 
@@ -23,11 +26,17 @@ module.exports.getSubscribers = function getSubscribers(value, identifier) {
         identifier
     ]);
 }; //get signature from subscribers to create thank you notice
+
 module.exports.getLoginDetails = function getLoginDetails(identifier) {
     return database.query(`SELECT * FROM registration WHERE email = $1`, [
         identifier
     ]);
 }; //get password to compare in login
+module.exports.getUserDetails = function getUserDetails(identifier) {
+    return database.query(`SELECT * FROM registration WHERE id= $1`, [
+        identifier
+    ]);
+}; //gets all user details using req.session.key as identifier for user
 
 //////PUTTING IN DATA queries
 module.exports.createSubscribers = function createSubscribers(
