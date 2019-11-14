@@ -6,6 +6,7 @@ const hb = require("express-handlebars");
 const cookieSession = require("cookie-session");
 const { hash, compare } = require("./utils/bcrypt");
 // const csurf = require("csurf");
+const { requirelogin, requireNoSignature } = require("./middleware");
 app.engine("handlebars", hb()); //handlebars is construction languae
 app.set("view engine", "handlebars"); //handlebar is templating language
 app.use(express.static("./views"));
@@ -51,7 +52,7 @@ app.post("/register", (req, res) => {
         body += chunk;
     }).on("end", () => {
         let pbody = querystring.parse(body);
-        // console.log(pbody);
+        console.log(pbody);
         hash(pbody.password).then(hashedPassword => {
             databaseActions
                 .register(
@@ -74,25 +75,7 @@ app.post("/register", (req, res) => {
         });
     });
 });
-app.get("/updateprofile", (req, res) => {
-    console.log(req.session.key);
-    databaseActions
-        .getUserDetails(req.session.key)
-        .then(results => {
-            res.render("./profileupdate", {
-                layout: "main",
-                firstname: results.rows[0].firstname,
-                lastname: results.rows[0].lastname,
-                email: results.rows[0].email,
-                age: results.rows[0].age,
-                city: results.rows[0].city,
-                url: results.rows[0].url
-            });
-        })
-        .catch(err => {
-            console.log("joint query in database doesnt work,", err);
-        });
-});
+
 app.post("/login", (req, res) => {
     let body = "";
     req.on("data", chunk => {
@@ -114,42 +97,37 @@ app.post("/login", (req, res) => {
 });
 
 app.use((request, response, next) => {
-    console.log("session key", request.session.key);
-    if (request.session.key) {
+    if (
+        request.session.key > 0 &&
+        request.url != "/reister" &&
+        request.url != "/login"
+    ) {
         next();
     } else {
-        console.log("access denied");
         response.redirect("/register");
     }
-}); //middleware check for sessioncookkie
+});
+// app.use(requirelogin);
 
-app.get("/petition", (req, res) => {
-    Promise.all([
-        databaseActions.writeLetter(),
-        databaseActions.getUserName(req.session.key)
-    ])
-
+app.get("/updateprofile", (req, res) => {
+    console.log(req.session.key);
+    databaseActions
+        .getUserDetails(req.session.key)
         .then(results => {
-            console.log(results);
-            let letter = "";
-            for (let i = 0; i < results[0].rows.length; i++) {
-                letter += results[0].rows[i].message;
-            }
-            let name = "";
-            for (let i = 0; i < results[1].rows.length; i++) {
-                name += results[1].rows[i].firstname;
-                name += " ";
-                name += results[1].rows[i].lastname;
-            }
-            console.log("name", name);
-            res.render("petition", {
+            res.render("./profileupdate", {
                 layout: "main",
-                letter: letter,
-                name: name
+                firstname: results.rows[0].firstname,
+                lastname: results.rows[0].lastname,
+                email: results.rows[0].email,
+                age: results.rows[0].age,
+                city: results.rows[0].city,
+                url: results.rows[0].url
             });
         })
-        .catch(err => console.log("letter unavailable"));
-}); //sending petition with letter
+        .catch(err => {
+            console.log("joint query in database doesnt work,", err);
+        });
+});
 
 app.post("/signature", (req, res) => {
     let body = "";
@@ -158,17 +136,22 @@ app.post("/signature", (req, res) => {
     }).on("end", () => {
         let pbody = querystring.parse(body);
         databaseActions
-            .createSubscribers(pbody.message, pbody.signature, req.session.key)
+            .createSubscribers(
+                `${pbody.message}. `,
+                pbody.signature,
+                req.session.key
+            )
             .then(id => {
                 // req.session.key = id.rows[0].id;
+
+                req.session.signed = "signed";
                 res.redirect("thankyou");
             })
             .catch(err => {
-                res.render("/petition", {
+                res.render("./petition", {
                     layout: "main",
                     error: "u didnt write your message :)"
                 });
-                console.log("u didnt fill out everything");
             });
     });
 }); //signing petition
@@ -204,7 +187,6 @@ app.post("/updateprofile", (req, res) => {
 });
 
 app.get("/thankyou", (req, res) => {
-    console.log("session key in GET request signature", req.session.key);
     Promise.all([
         databaseActions.getSubscribers("signature", req.session.key),
         databaseActions.writeLetter(),
@@ -224,6 +206,7 @@ app.get("/thankyou", (req, res) => {
             for (let i = 0; i < results[1].rows.length; i++) {
                 letter += results[1].rows[i].message;
             }
+
             res.render("signatures", {
                 layout: "main",
                 signature: results[0].rows[0].signature,
@@ -232,11 +215,18 @@ app.get("/thankyou", (req, res) => {
                 email: results[3].rows[0].email,
                 age: results[3].rows[0].age,
                 city: results[3].rows[0].city,
-                message: results[3].rows[0].message
+                url: results[3].rows[0].url
             });
         })
         .catch(err => console.log("didnt getSubscribers", err));
 }); //thank you and list of signatures
+
+app.get("/logout", (req, res) => {
+    req.session.key = null;
+    req.session.signed = null;
+    console.log(req.session.key);
+    res.redirect("/thankyou");
+});
 
 app.get("/superfans", (req, res) => {
     res.render("superfans", {
@@ -244,8 +234,45 @@ app.get("/superfans", (req, res) => {
     });
 });
 
+app.get("/petition", (req, res) => {
+    if (req.session.signed == "signed") {
+        res.redirect("/thankyou");
+    } else {
+        Promise.all([
+            databaseActions.writeLetter(),
+            databaseActions.getUserName(req.session.key),
+            databaseActions.getUserDetails(req.session.key)
+        ])
+
+            .then(results => {
+                console.log(results);
+                let letter = "";
+                for (let i = 0; i < results[0].rows.length; i++) {
+                    letter += results[0].rows[i].message;
+                }
+                let name = "";
+                for (let i = 0; i < results[1].rows.length; i++) {
+                    name += results[1].rows[i].firstname;
+                    name += " ";
+                    name += results[1].rows[i].lastname;
+                }
+                console.log("usermenudetails", results[2].rows[0]);
+                res.render("petition", {
+                    layout: "main",
+                    letter: letter,
+                    name: name,
+                    email: results[2].rows[0].email,
+                    age: results[2].rows[0].age,
+                    city: results[2].rows[0].city,
+                    url: results[2].rows[0].url
+                });
+            })
+            .catch(err => console.log("letter unavailable"));
+    }
+}); //sending petition with letter
 app.listen(process.env.PORT || 8080, () => console.log("awake"));
 
 //////remember to add: logout and link to udate-profile in usermenu, and style it! create usercatalogue for "co-signers"
 /////style style style
 ////csurf
+/////pass requirement to route that demands tshat there is content inthe signature field for user_id
