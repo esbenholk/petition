@@ -1,0 +1,22 @@
+<h1> list of superfans </h1>
+
+<ul id="co-signers">
+    {{#co_signers}}
+  <li >{{firstname}} {{lastname}} // <a href="/allsignatures/{{age}}"> {{age}} </a> // <a href="/allsignatures/{{city}}"> {{city}} </a>
+    {{/co_signers}}
+</ul>
+
+<ul>
+{{#city_specific_co_signers}}
+<li >{{firstname}} {{lastname}} // <a href="/allsignatures/{{age}}"> {{age}} </a>
+{{/city_specific_co_signers}}
+</ul>
+
+<ul>
+{{#age_specific_co_signers}}
+<li >{{firstname}} {{lastname}} // <a href="/allsignatures/{{city}}"> {{city}} </a>
+{{/age_specific_co_signers}}
+</ul>
+
+
+{{> usermenu}}

@@ -158,10 +158,12 @@ footer a {
     position: fixed;
     right: 0;
     top: 0;
+
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
     color: white;
+    z-index: 99999999;
 }
 #thumbnail {
     width: 90%;
@@ -249,4 +251,21 @@ footer a {
     color: white;
     float: right;
     border: 2px yellow solid;
+}
+
+/* allsignatures */
+#co-signers {
+    position: absolute;
+    left: 100px;
+    top: 100px;
+
+    color: white;
+    text-decoration: none;
+}
+#co-signers a {
+    color: white;
+    text-decoration: none;
+}
+#co-signers li {
+    list-style: none;
 }

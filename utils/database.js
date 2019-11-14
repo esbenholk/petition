@@ -4,11 +4,11 @@ var database = spicedPg(
         "postgres:postgres:postgres@localhost:5432/petition"
 );
 
-//database queeries. we will use this module to facilitate all of our commands to the psql database
-
 /////SELECTING TOTAL INFORMATIONS
 module.exports.getNames = function getNames() {
-    return database.query(`SELECT (firstname, lastname) FROM registration`);
+    return database.query(
+        `SELECT firstname, lastname, city, age FROM registration LEFT OUTER JOIN user_profiles ON registration.id = user_profiles.user_profiles_id`
+    );
 }; ////getting names of co-signers
 module.exports.writeLetter = function writeLetter() {
     return database.query(`SELECT message FROM subscribers`);
@@ -38,6 +38,19 @@ module.exports.getUserDetails = function getUserDetails(identifier) {
         [identifier]
     );
 }; //gets all user details using req.session.key as identifier for user
+
+module.exports.getNamesfromCity = function(city) {
+    return database.query(
+        `SELECT firstname, lastname, age FROM registration LEFT OUTER JOIN user_profiles ON registration.id = user_profiles.user_profiles_id WHERE user_profiles.city = $1`,
+        [city]
+    );
+};
+module.exports.getNamesfromAge = function(age) {
+    return database.query(
+        `SELECT firstname, lastname, city FROM registration LEFT OUTER JOIN user_profiles ON registration.id = user_profiles.user_profiles_id WHERE user_profiles.age = $1`,
+        [age]
+    );
+};
 
 //////PUTTING IN DATA queries
 module.exports.createSubscribers = function createSubscribers(

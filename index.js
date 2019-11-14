@@ -192,7 +192,6 @@ app.get("/thankyou", (req, res) => {
         databaseActions.writeLetter(),
         databaseActions.getUserName(req.session.key),
         databaseActions.getUserDetails(req.session.key)
-        // ,databaseActions.getNames()
     ])
         .then(results => {
             let name = "";
@@ -229,9 +228,23 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/superfans", (req, res) => {
-    res.render("superfans", {
-        layout: "main"
-    });
+    databaseActions
+        .getUserDetails(req.session.key)
+        .then(results => {
+            res.render("superfans", {
+                layout: "main",
+                name:
+                    results.rows[0].firstname + " " + results.rows[0].lastname,
+                email: results.rows[0].email,
+                age: results.rows[0].age,
+                city: results.rows[0].city,
+                url: results.rows[0].url
+            });
+        })
+        .catch(err => {
+            console.log("user details not rendered");
+            res.redirect("/thankyou");
+        });
 });
 
 app.get("/petition", (req, res) => {
@@ -270,9 +283,93 @@ app.get("/petition", (req, res) => {
             .catch(err => console.log("letter unavailable"));
     }
 }); //sending petition with letter
+
+app.get("/allsignatures", (req, res) => {
+    if (req.session.signed == "signed") {
+        Promise.all([
+            databaseActions.getNames(),
+            databaseActions.getUserDetails(req.session.key)
+        ]).then(results => {
+            res.render("allsignatures", {
+                layout: "main",
+                name:
+                    results[1].rows[0].firstname +
+                    " " +
+                    results[1].rows[0].lastname,
+                email: results[1].rows[0].email,
+                age: results[1].rows[0].age,
+                city: results[1].rows[0].city,
+                url: results[1].rows[0].url,
+                co_signers: results[0].rows
+            });
+        });
+    } else {
+        console.log("how did u even get here?");
+    }
+});
+
+app.get("/allsignatures/:city", (req, res) => {
+    if (req.session.signed == "signed") {
+        let identifier = req.params.city;
+        let functionsArray = [
+            databaseActions.getNames(),
+            databaseActions.getUserDetails(req.session.key)
+        ];
+        if (typeof req.params.city == "number") {
+            functionsArray.push(databaseActions.getNamesfromAge(identifier));
+        } else {
+            functionsArray.push(databaseActions.getNamesfromCity(identifier));
+        }
+        Promise.all(functionsArray).then(results => {
+            console.log("gets names from city in promise all", results[2].rows);
+            res.render("allsignatures", {
+                layout: "main",
+                name:
+                    results[1].rows[0].firstname +
+                    " " +
+                    results[1].rows[0].lastname,
+                email: results[1].rows[0].email,
+                age: results[1].rows[0].age,
+                city: results[1].rows[0].city,
+                url: results[1].rows[0].url,
+                co_signers: results[0].rows,
+                city_specific_co_signers: results[2].rows
+            });
+        });
+    } else {
+        console.log("how did u even get here?");
+    }
+});
+
+// app.get("/allsignatures/:age", (req, res) => {
+//     if (req.session.signed == "signed") {
+//         let age = req.params.maxAge;
+//         Promise.all([
+//             databaseActions.getNames(),
+//             databaseActions.getUserDetails(req.session.key),
+//             databaseActions.getNamesfromAge(age)
+//         ]).then(results => {
+//             console.log("gets names from age", results[2].rows);
+//             res.render("allsignatures", {
+//                 layout: "main",
+//                 name:
+//                     results[1].rows[0].firstname +
+//                     " " +
+//                     results[1].rows[0].lastname,
+//                 email: results[1].rows[0].email,
+//                 age: results[1].rows[0].age,
+//                 city: results[1].rows[0].city,
+//                 url: results[1].rows[0].url,
+//                 co_signers: results[0].rows,
+//                 age_specific_co_signers: results[2].rows
+//             });
+//         });
+//     } else {
+//         console.log("how did u even get here?");
+//     }
+// });
 app.listen(process.env.PORT || 8080, () => console.log("awake"));
 
-//////remember to add: logout and link to udate-profile in usermenu, and style it! create usercatalogue for "co-signers"
+//////remember to create usercatalogue for "co-signers"
 /////style style style
 ////csurf
-/////pass requirement to route that demands tshat there is content inthe signature field for user_id
