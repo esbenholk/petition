@@ -90,7 +90,34 @@ footer a {
 #secretsignature {
     display: none;
 }
-
+/* profile update */
+#updatepage {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+}
+#update li {
+    color: white;
+    list-style: none;
+}
+#update input {
+    background: Transparent;
+    border: none;
+    height: 30px;
+    font-size: 20px;
+    color: white;
+}
+#update input:focus {
+    outline: none;
+}
+#register {
+    margin-top: 20px;
+    background: yellow;
+}
+#license {
+    transform: rotate(10deg);
+    height: 150px;
+}
 /* letter and signature  */
 #lettercontainer {
     margin-top: 25%;
@@ -119,6 +146,10 @@ footer a {
     align-items: center;
     justify-content: center;
     margin: 40px;
+}
+.thankyou a {
+    margin-top: 30px;
+    color: white;
 }
 #happyanistongif {
     text-align: center;
@@ -267,5 +298,16 @@ footer a {
     text-decoration: none;
 }
 #co-signers li {
+    list-style: none;
+}
+#city_specific_co_signers {
+    position: absolute;
+    left: 600px;
+    top: 100px;
+
+    color: white;
+    text-decoration: none;
+}
+#city_specific_co_signers li {
     list-style: none;
 }

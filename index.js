@@ -6,7 +6,7 @@ const hb = require("express-handlebars");
 const cookieSession = require("cookie-session");
 const { hash, compare } = require("./utils/bcrypt");
 // const csurf = require("csurf");
-const { requirelogin, requireNoSignature } = require("./middleware");
+
 app.engine("handlebars", hb()); //handlebars is construction languae
 app.set("view engine", "handlebars"); //handlebar is templating language
 app.use(express.static("./views"));
@@ -21,7 +21,7 @@ app.use(
 ); //cookie session
 
 app.get("/register", (req, res) => {
-    if (req.session.key) {
+    if (req.session.key > 0) {
         res.redirect("/petition");
     } else {
         res.render("registration", {
@@ -36,12 +36,12 @@ app.get("/register", (req, res) => {
 // });
 
 app.get("/login", (req, res) => {
-    if (req.session.key > 0) {
-        res.redirect("/petition");
-    } else {
+    if (!req.session.key) {
         res.render("login", {
             layout: "main"
         });
+    } else {
+        res.redirect("/petition");
     }
 });
 
@@ -135,6 +135,7 @@ app.post("/signature", (req, res) => {
         body += chunk;
     }).on("end", () => {
         let pbody = querystring.parse(body);
+        // console.log(pbody.signature);
         databaseActions
             .createSubscribers(
                 `${pbody.message}. `,
@@ -194,6 +195,7 @@ app.get("/thankyou", (req, res) => {
         databaseActions.getUserDetails(req.session.key)
     ])
         .then(results => {
+            console.log("in thankyou", results);
             let name = "";
             for (let i = 0; i < results[2].rows.length; i++) {
                 name += results[2].rows[i].firstname;
@@ -248,6 +250,7 @@ app.get("/superfans", (req, res) => {
 });
 
 app.get("/petition", (req, res) => {
+    console.log(req.session.signed);
     if (req.session.signed == "signed") {
         res.redirect("/thankyou");
     } else {
@@ -321,7 +324,7 @@ app.get("/allsignatures/:city", (req, res) => {
             functionsArray.push(databaseActions.getNamesfromCity(identifier));
         }
         Promise.all(functionsArray).then(results => {
-            console.log("gets names from city in promise all", results[2].rows);
+            console.log("gets names from city in promise all", results[2]);
             res.render("allsignatures", {
                 layout: "main",
                 name:
@@ -333,7 +336,8 @@ app.get("/allsignatures/:city", (req, res) => {
                 city: results[1].rows[0].city,
                 url: results[1].rows[0].url,
                 co_signers: results[0].rows,
-                city_specific_co_signers: results[2].rows
+                city_specific_co_signers: results[2].rows,
+                searchcity: req.params.city
             });
         });
     } else {
@@ -341,33 +345,6 @@ app.get("/allsignatures/:city", (req, res) => {
     }
 });
 
-// app.get("/allsignatures/:age", (req, res) => {
-//     if (req.session.signed == "signed") {
-//         let age = req.params.maxAge;
-//         Promise.all([
-//             databaseActions.getNames(),
-//             databaseActions.getUserDetails(req.session.key),
-//             databaseActions.getNamesfromAge(age)
-//         ]).then(results => {
-//             console.log("gets names from age", results[2].rows);
-//             res.render("allsignatures", {
-//                 layout: "main",
-//                 name:
-//                     results[1].rows[0].firstname +
-//                     " " +
-//                     results[1].rows[0].lastname,
-//                 email: results[1].rows[0].email,
-//                 age: results[1].rows[0].age,
-//                 city: results[1].rows[0].city,
-//                 url: results[1].rows[0].url,
-//                 co_signers: results[0].rows,
-//                 age_specific_co_signers: results[2].rows
-//             });
-//         });
-//     } else {
-//         console.log("how did u even get here?");
-//     }
-// });
 app.listen(process.env.PORT || 8080, () => console.log("awake"));
 
 //////remember to create usercatalogue for "co-signers"

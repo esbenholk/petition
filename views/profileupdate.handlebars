@@ -1,23 +1,28 @@
 
 
-<div id="fake-license">
-    <img src="anistonregistration.jpg">
-</div>
 
+<div id="updatepage">
 <form id="update" action="/updateprofile" method="POST">
 <ul>
-    <li><input name="firstName" id="firstName" value="{{firstname}}"placeholder="first name"> </input>
-    <li><input name="lastName" id="lastName" value="{{lastname}}" placeholder="last name... friend"> </input>
-    <li><input type="number" name="age" value="{{age}}"id="age" placeholder="age"> </input>
-    <li><input name="city" id="city" value="{{city}}"placeholder="city"> </input>
-    <li><input name="url" id="url" value="{{url}}" placeholder="URL"> </input>
-    <li><input name="email" id="email" value="{{email}}" placeholder="email"> </input>
-    <li><input name="password" type="password" id="password" value="{{password}}" placeholder="password"></input>
+
+    <li><input autocomplete="off" name="firstName" id="firstName" value="{{firstname}}"placeholder="first name"> </input>
+    <li><input autocomplete="off" name="lastName" id="lastName" value="{{lastname}}" placeholder="last name... friend"> </input>
+    <li><input autocomplete="off" type="number" name="age" value="{{age}}"id="age" placeholder="age"> </input>
+    <li><input autocomplete="off" name="city" id="city" value="{{city}}" placeholder="city"> </input>
+    <li><input autocomplete="off" name="url" id="url" value="{{url}}" placeholder="URL"> </input>
+    <li><input autocomplete="off" name="email" id="email" value="{{email}}" placeholder="email"> </input>
+    <li><input autocomplete="off" name="password" type="password" id="password" value="{{password}}" placeholder="password"></input>
     <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
     <li><button type="submit" id="register" >UPDATE PROFILE</button>
+    <li> <a href="/petition"> <button >GO TO WRITING LETTER</button> </a>
 
 </ul>
 </form>
-    <a href="/petition"> <button >GO TO WRITING LETTER</button> </a>
+<div>
+    <div >
+    <img id="license" src="anistonregistration.jpg">
+    </div>
+</div>
 
+</div>
 {{> usermenu}}

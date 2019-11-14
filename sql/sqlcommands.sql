@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS user_profiles;
 
 CREATE TABLE subscribers (
 id SERIAL primary key,
-message VARCHAR(180) CHECK (message != ''),
+message VARCHAR CHECK (message != ''),
 signature TEXT NOT NULL CHECK (signature != ''),
 user_id INTEGER
 );
