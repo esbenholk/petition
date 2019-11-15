@@ -8,10 +8,10 @@
     <input name="lastName" id="lastName" placeholder="and now your last name... friend"> </input> -->
     <input name="message" id="message" autocomplete="off" placeholder="click here to write a text that you can add to the letter above! share your love for Aniston with all the superfans!"> </input>
     <input name="signature" id="secretsignature"></input>
-    <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
     <p id="signers"> xoxo love from ... {{name}} </p>
     <div id="submitsignature">
     <canvas id="signature" width="500" height="100"> </canvas>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button type="submit" id="submit" > LOVE IT! SEND IT </button>
 </div>
 </form>

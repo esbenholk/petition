@@ -23,13 +23,22 @@
     <li><input autocomplete="off" name="city" id="city" value="{{city}}" placeholder="city"> </input>
     <li><input autocomplete="off" name="url" id="url" value="{{url}}" placeholder="URL"> </input>
     <li><input autocomplete="off" name="email" id="email" value="{{email}}" placeholder="email"> </input>
-    <li><input autocomplete="off" name="password" type="password" id="password" value="{{password}}" placeholder="password"></input>
-    <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
+
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <li><button type="submit" id="register" >UPDATE PROFILE</button>
-    <li> <a href="/petition"> <button >GO TO LETTER</button> </a>
+
+
 
 </ul>
 </form>
+
+<form id="updatepassword" action="/updatepassword" method="POST">
+<li><input autocomplete="off" name="password" type="password" id="password" value="{{password}}" placeholder="password"></input>
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
+<li><button type="submit" id="updatepassword" >UPDATE password</button>
+</form>
+
+    <li> <a href="/petition"> <button >GO TO LETTER</button> </a>
 
 
 </div>

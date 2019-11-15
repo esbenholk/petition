@@ -28,10 +28,9 @@ module.exports.getSubscribers = function getSubscribers(value, identifier) {
 }; //get signature from subscribers to create thank you notice
 
 module.exports.getLoginDetails = function getLoginDetails(identifier) {
-    return database.query(
-        `SELECT * FROM registration LEFT OUTER JOIN subscribers ON registration.id = subscribers.user_id WHERE email = $1`,
-        [identifier]
-    );
+    return database.query(`SELECT * FROM registration WHERE email=$1`, [
+        identifier
+    ]);
 }; //get password to compare in login
 module.exports.getUserDetails = function getUserDetails(identifier) {
     return database.query(
@@ -40,6 +39,12 @@ module.exports.getUserDetails = function getUserDetails(identifier) {
     );
 }; //gets all user details using req.session.key as identifier for user
 
+module.exports.checkSignature = function(identifier) {
+    return database.query(
+        `SELECT signature FROM subscribers WHERE user_id=$1`,
+        [identifier]
+    );
+};
 module.exports.getNamesfromCity = function(city) {
     return database.query(
         `SELECT firstname, lastname, age FROM registration LEFT OUTER JOIN user_profiles ON registration.id = user_profiles.user_profiles_id WHERE user_profiles.city = $1`,
@@ -82,13 +87,25 @@ module.exports.updateRegistration = function updateRegistration(
     firstname,
     lastname,
     email,
-    hashedPassword,
-    id
+    id,
+    password
 ) {
     /// updated registration table using Conflict with ID=session.key
     return database.query(
-        `INSERT INTO registration (firstname, lastname, email, password, id) VALUES ($1, $2, $3, $4, $5) on CONFLICT (id) DO UPDATE SET firstname = $1, lastname = $2, email= $3, password=$4`,
-        [firstname, lastname, email, hashedPassword, id]
+        `INSERT INTO registration (firstname, lastname, email, id, password) VALUES ($1, $2, $3, $4, $5) on CONFLICT (id) DO UPDATE SET firstname = $1, lastname = $2, email= $3, password= $5`,
+        [firstname, lastname, email, id, password]
+    );
+};
+module.exports.updatePassword = function updatePassword(
+    firstname,
+    lastname,
+    email,
+    password,
+    id
+) {
+    return database.query(
+        `INSERT INTO registration (firstname, lastname, email, password, id) VALUES ($1, $2, $3, $4, $5) on CONFLICT (id) DO UPDATE SET firstname=$1, lastname=$2, email=$3, password = $4`,
+        [firstname, lastname, email, password, id]
     );
 };
 

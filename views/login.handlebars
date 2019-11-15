@@ -3,10 +3,12 @@
     <h1 id="top" class="headline">JENNIFER ANISTON SUPERFANS</h1>
 
     <div id=loginform>
+        {{error}}
         <form id="login" action="/login" method="POST">
             <input autocomplete="off" name="email" id="loginemail" placeholder="your unique email"> </input>
             <input autocomplete="off" name="password" type="password" id="loginpassword" placeholder="that password u created once, 'member?"> </input>
             <button type="submit" id="login"> log in </button>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
             <p> or if u dont actually a user <a href="/registration"> register as SUPERFAN here </a> </p>
         </form>
     </div>
