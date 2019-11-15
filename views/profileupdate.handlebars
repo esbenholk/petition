@@ -2,6 +2,18 @@
 
 
 <div id="updatepage">
+    <div>
+
+        <img id="license" src="anistonregistration.jpg">
+        <div  id="fakelicense" >
+            <img src="fakelicense.png">
+            <p id="licensename"> {{firstname}} {{lastname}}</p>
+            <p id="licensemail"> {{email}} </p>
+            <p id="licensecity"> {{city}} </p>
+            <p id="licenseage"> {{licenseage}} </p>
+        </div>
+
+    </div>
 <form id="update" action="/updateprofile" method="POST">
 <ul>
 
@@ -14,15 +26,11 @@
     <li><input autocomplete="off" name="password" type="password" id="password" value="{{password}}" placeholder="password"></input>
     <!-- <input type="hidden" name="_crsf" value="{{csrfToken}}"> -->
     <li><button type="submit" id="register" >UPDATE PROFILE</button>
-    <li> <a href="/petition"> <button >GO TO WRITING LETTER</button> </a>
+    <li> <a href="/petition"> <button >GO TO LETTER</button> </a>
 
 </ul>
 </form>
-<div>
-    <div >
-    <img id="license" src="anistonregistration.jpg">
-    </div>
-</div>
+
 
 </div>
 {{> usermenu}}

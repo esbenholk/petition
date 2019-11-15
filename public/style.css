@@ -110,6 +110,9 @@ footer a {
 #update input:focus {
     outline: none;
 }
+#update input::placeholder {
+    color: yellow;
+}
 #register {
     margin-top: 20px;
     background: yellow;
@@ -117,6 +120,40 @@ footer a {
 #license {
     transform: rotate(10deg);
     height: 150px;
+}
+
+#fakelicense {
+    transform: rotate(-10deg);
+}
+#fakelicense img {
+    height: 200px;
+}
+#licensename {
+    position: absolute;
+    top: 50px;
+    left: 130px;
+    font-family: "friends";
+    width: 150px;
+    text-shadow: 2px 2px #8dcddc;
+}
+#licenseage {
+    position: absolute;
+    top: 30px;
+    left: 70px;
+}
+#licensemail {
+    position: absolute;
+    top: 90px;
+    left: 170px;
+    width: 150px;
+    font-size: 13px;
+}
+#licensecity {
+    position: absolute;
+    top: 110px;
+    left: 130px;
+    width: 150px;
+    font-size: 13px;
 }
 /* letter and signature  */
 #lettercontainer {

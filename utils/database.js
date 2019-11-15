@@ -28,9 +28,10 @@ module.exports.getSubscribers = function getSubscribers(value, identifier) {
 }; //get signature from subscribers to create thank you notice
 
 module.exports.getLoginDetails = function getLoginDetails(identifier) {
-    return database.query(`SELECT * FROM registration WHERE email = $1`, [
-        identifier
-    ]);
+    return database.query(
+        `SELECT * FROM registration LEFT OUTER JOIN subscribers ON registration.id = subscribers.user_id WHERE email = $1`,
+        [identifier]
+    );
 }; //get password to compare in login
 module.exports.getUserDetails = function getUserDetails(identifier) {
     return database.query(

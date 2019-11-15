@@ -85,7 +85,14 @@ app.post("/login", (req, res) => {
         databaseActions
             .getLoginDetails(pbody.email)
             .then(userDetails => {
+                console.log(
+                    "these are the userdetails, look for subscribers: signature",
+                    userDetails
+                );
                 if (compare(pbody.password, userDetails.rows[0].password)) {
+                    if (userDetails.rows[0].signature.length > 5) {
+                        req.session.signed = "signed";
+                    }
                     req.session.key = userDetails.rows[0].id;
                     res.redirect("/petition");
                 }
@@ -121,7 +128,8 @@ app.get("/updateprofile", (req, res) => {
                 email: results.rows[0].email,
                 age: results.rows[0].age,
                 city: results.rows[0].city,
-                url: results.rows[0].url
+                url: results.rows[0].url,
+                licenseage: 2019 - results.rows[0].age
             });
         })
         .catch(err => {
