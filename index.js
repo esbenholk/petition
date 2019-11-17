@@ -198,7 +198,7 @@ app.post("/updateprofile", (req, res) => {
             ]);
         })
         .then(results => {
-            res.redirect("/updateprofile");
+            res.redirect("/petition");
         })
         .catch(err => console.log("doesnt update database", err));
 });
@@ -285,40 +285,40 @@ app.get("/superfans", (req, res) => {
 });
 
 app.get("/petition", (req, res) => {
-    if (req.session.signed == "signed") {
-        res.redirect("/thankyou");
-    } else {
-        Promise.all([
-            databaseActions.writeLetter(),
-            databaseActions.getUserName(req.session.key),
-            databaseActions.getUserDetails(req.session.key)
-        ])
+    // if (req.session.signed == "signed") {
+    //     res.redirect("/thankyou");
+    // } else {
+    Promise.all([
+        databaseActions.writeLetter(),
+        databaseActions.getUserName(req.session.key),
+        databaseActions.getUserDetails(req.session.key)
+    ])
 
-            .then(results => {
-                console.log("details in petition", results[2].rows);
-                let letter = "";
-                for (let i = 0; i < results[0].rows.length; i++) {
-                    letter += results[0].rows[i].message;
-                }
-                let name = "";
-                for (let i = 0; i < results[1].rows.length; i++) {
-                    name += results[1].rows[i].firstname;
-                    name += " ";
-                    name += results[1].rows[i].lastname;
-                }
-                console.log("usermenudetails", results[2].rows[0]);
-                res.render("petition", {
-                    layout: "main",
-                    letter: letter,
-                    name: name,
-                    email: results[2].rows[0].email,
-                    age: results[2].rows[0].age,
-                    city: results[2].rows[0].city,
-                    url: results[2].rows[0].url
-                });
-            })
-            .catch(err => console.log("letter unavailable"));
-    }
+        .then(results => {
+            console.log("details in petition", results[2].rows);
+            let letter = "";
+            for (let i = 0; i < results[0].rows.length; i++) {
+                letter += results[0].rows[i].message;
+            }
+            let name = "";
+            for (let i = 0; i < results[1].rows.length; i++) {
+                name += results[1].rows[i].firstname;
+                name += " ";
+                name += results[1].rows[i].lastname;
+            }
+            console.log("usermenudetails", results[2].rows[0]);
+            res.render("petition", {
+                layout: "main",
+                letter: letter,
+                name: name,
+                email: results[2].rows[0].email,
+                age: results[2].rows[0].age,
+                city: results[2].rows[0].city,
+                url: results[2].rows[0].url
+            });
+        })
+        .catch(err => console.log("letter unavailable"));
+    // }
 }); //sending petition with letter
 
 app.get("/allsignatures", (req, res) => {
@@ -379,6 +379,38 @@ app.get("/allsignatures/:city", (req, res) => {
     }
 });
 
+app.get("/deletesignature", (req, res) => {
+    if (req.session.signed != "signed") {
+        res.redirect("/petition");
+    } else {
+        Promise.all([
+            databaseActions.getUserName(req.session.key),
+            databaseActions.getUserDetails(req.session.key),
+            databaseActions.deletesignature(req.session.key)
+        ])
+            .then(results => {
+                let name = "";
+                for (let i = 0; i < results[0].rows.length; i++) {
+                    name += results[0].rows[i].firstname;
+                    name += " ";
+                    name += results[0].rows[i].lastname;
+                }
+                req.session.signed = null;
+                res.render("deletesignature", {
+                    layout: "main",
+                    text:
+                        "u deleted your signature and message to miss Jennifer Aniston",
+                    image: "anistongifshocked.gif",
+                    name: name,
+                    email: results[1].rows[0].email,
+                    age: results[1].rows[0].age,
+                    city: results[1].rows[0].city,
+                    url: results[1].rows[0].url
+                });
+            })
+            .catch(err => console.log("unable to delete signature"));
+    }
+});
 app.listen(process.env.PORT || 8080, () => console.log("awake"));
 
 //////remember to create usercatalogue for "co-signers"

@@ -121,3 +121,9 @@ module.exports.createUserDetails = function createUserDetails(
         [age, city, url, user_profiles_id]
     );
 };
+
+module.exports.deletesignature = function(identifier) {
+    return database.query(`DELETE FROM subscribers WHERE user_id=$1`, [
+        identifier
+    ]);
+};

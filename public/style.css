@@ -96,24 +96,24 @@ footer a {
     display: flex;
     flex-direction: row;
 }
-#update li {
+#updatepage li {
     color: white;
     list-style: none;
 }
-#update input {
+#updatepage input {
     background: Transparent;
     border: none;
     height: 30px;
     font-size: 20px;
     color: white;
 }
-#update input:focus {
+#updatepage input:focus {
     outline: none;
 }
 #update input::placeholder {
     color: yellow;
 }
-#register {
+#updatepage button {
     margin-top: 20px;
     background: yellow;
 }
@@ -347,4 +347,24 @@ footer a {
 }
 #city_specific_co_signers li {
     list-style: none;
+}
+
+#deletesignature-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#deletesignature-page img {
+}
+#deletesignature {
+    margin-top: 100px;
+    width: 50%;
+    text-align: justify;
+    color: white;
+}
+#deletesignaturecanvas {
+    displey: flex;
+    flex-direction: row;
 }

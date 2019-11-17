@@ -14,6 +14,8 @@
         </div>
 
     </div>
+
+<div>
 <form id="update" action="/updateprofile" method="POST">
 <ul>
 
@@ -31,14 +33,18 @@
 
 </ul>
 </form>
-
 <form id="updatepassword" action="/updatepassword" method="POST">
+    <ul>
 <li><input autocomplete="off" name="password" type="password" id="password" value="{{password}}" placeholder="password"></input>
 <input type="hidden" name="_csrf" value="{{csrfToken}}">
 <li><button type="submit" id="updatepassword" >UPDATE password</button>
+</ul>
 </form>
+</div>
 
-    <li> <a href="/petition"> <button >GO TO LETTER</button> </a>
+
+
+<li> <a href="/petition"> <button >GO TO LETTER</button> </a>
 
 
 </div>
