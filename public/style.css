@@ -236,6 +236,9 @@ footer a {
 #thumbnail {
     width: 90%;
 }
+#deletesignaturelink {
+    margin-top: 100px;
+}
 
 /* registrationpage */
 #registrationpage {
@@ -326,9 +329,14 @@ footer a {
     position: absolute;
     left: 100px;
     top: 100px;
-
     color: white;
     text-decoration: none;
+    display: flex;
+    flex-direction: row;
+}
+#avatar {
+    float: left;
+    width: 150px;
 }
 #co-signers a {
     color: white;
@@ -336,10 +344,11 @@ footer a {
 }
 #co-signers li {
     list-style: none;
+    margin: 10px;
 }
 #city_specific_co_signers {
     position: absolute;
-    left: 600px;
+    left: 500px;
     top: 100px;
 
     color: white;
@@ -355,16 +364,32 @@ footer a {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
-#deletesignature-page img {
+#shockedaniston {
+    width: 100%;
+    height: 100%;
+    z-index: -100000;
 }
-#deletesignature {
-    margin-top: 100px;
-    width: 50%;
-    text-align: justify;
+#deletesignature-page a {
+    text-decoration: none;
     color: white;
 }
-#deletesignaturecanvas {
-    displey: flex;
-    flex-direction: row;
+#deletesignaturetext {
+    position: fixed;
+    top: 35%;
+    color: white;
+}
+#returntothankyou {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    font-family: "friends";
+    height: 75px;
+    background: yellow;
+    border-radius: 40%;
 }
