@@ -336,7 +336,7 @@ footer a {
     color: white;
     text-decoration: none;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 #avatar {
     float: left;
