@@ -46,6 +46,7 @@ footer a {
 }
 #message {
     height: 100px;
+    font-size: 20px;
     background: Transparent;
     color: yellow;
     border: none;
@@ -69,6 +70,7 @@ footer a {
     display: flex;
     flex-direction: column;
     text-align: center;
+    margin-bottom: 100px;
 }
 #submit {
     width: 90px;
@@ -337,6 +339,10 @@ footer a {
     text-decoration: none;
     display: flex;
     flex-direction: column;
+}
+co-signer {
+    display: flex;
+    flex-direction: row;
 }
 #avatar {
     float: left;

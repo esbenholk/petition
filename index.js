@@ -86,12 +86,6 @@ app.post("/login", (req, res) => {
             let password = pbody.password;
             let hashedDBPassword = userDetails.rows[0].password;
             // compare(password, userDetails.rows[0].password);
-
-            console.log(
-                "password, and hashedpasswordfromdb",
-                password,
-                hashedDBPassword
-            );
             compare(password, hashedDBPassword).then(match => {
                 console.log("match", match);
                 if (match === true) {
